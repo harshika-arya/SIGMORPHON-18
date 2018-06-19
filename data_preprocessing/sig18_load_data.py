@@ -74,70 +74,73 @@ def load_data(test= False, context1=False, context2=False, context3=False):
                 y[i][j] = X_word2idx['UNK']
          
    # consider a context of 1 word right and left each
-	# make two lists by shifting the elements
-	if context1 == True or context2 == True or context3 == True: 
-		X_left = deque(X_unique)
-		
-		X_left.append(' ') # all elements would be shifted one left
-		X_left.popleft()
-		X_left1 = list(X_left)
-		X_left1 = getIndexedWords(X_left1, y_unique, orig=False)
+   # make two lists by shifting the elements
+   if context1 == True or context2 == True or context3 == True: 
+	X_left = deque(X_unique)
 
-		X_left.append(' ')
-		X_left.popleft()
-		X_left2 = list(X_left)
-		X_left2 = getIndexedWords(X_left2, y_unique, orig=False)
-		
-		X_left.append(' ')
-		X_left.popleft()
-		X_left3 = list(X_left)
-		X_left3 = getIndexedWords(X_left3, y_unique, orig=False)
-		
+	X_left.append(' ') # all elements would be shifted one left
+	X_left.popleft()
+	X_left1 = list(X_left)
+	X_left1 = getIndexedWords(X_left1, y_unique, orig=False)
 
-		X_right = deque(X_unique)
+	X_left.append(' ')
+	X_left.popleft()
+	X_left2 = list(X_left)
+	X_left2 = getIndexedWords(X_left2, y_unique, orig=False)
 
-		X_right.appendleft(' ') 
-		X_right.pop()
-		X_right1 = list(X_right)
-		X_right1 = getIndexedWords(X_right1, y_unique, orig=False)
+	X_left.append(' ')
+	X_left.popleft()
+	X_left3 = list(X_left)
+	X_left3 = getIndexedWords(X_left3, y_unique, orig=False)
 
-		X_right.appendleft(' ')
-		X_right.pop()
-		X_right2 = list(X_right)
-		X_right2 = getIndexedWords(X_right2, y_unique, orig=False)
 
-		X_right.appendleft(' ')
-		X_right.pop()
-		X_right3 = list(X_right)
-		X_right3 = getIndexedWords(X_right3, y_unique, orig=False)
+	X_right = deque(X_unique)
 
-		if context1 == True:
-			if test == True:
-				complete_list = [X_un, y_un, y1, y2, y3, y4, y5, y7, y8]
-				return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word, X_left, X_right)
-			else:
-				return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word, X_left, X_right)
+	X_right.appendleft(' ') 
+	X_right.pop()
+	X_right1 = list(X_right)
+	X_right1 = getIndexedWords(X_right1, y_unique, orig=False)
 
-		elif context2 == True:
-			if test == True:
-				complete_list = [X_un, y_un, y1, y2, y3, y4, y5, y7, y8]
-				return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, 
-					len(X_vocab)+2, X_word2idx, X_idx2word, X_left1, X_left2, X_right1, X_right2)
-			else:
-				return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, 
-					X_word2idx, X_idx2word, X_left1, X_left2, X_right1, X_right2)
+	X_right.appendleft(' ')
+	X_right.pop()
+	X_right2 = list(X_right)
+	X_right2 = getIndexedWords(X_right2, y_unique, orig=False)
 
-		elif context3 == True:
-			if test == True:
-				complete_list = [X_un, y_un, y1, y2, y3, y4, y5, y7, y8]
-				return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, 
-					len(X_vocab)+2, X_word2idx, X_idx2word, X_left1, X_left2, X_left3, X_right1, X_right2, X_right3)
-			else:
-				return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, 
-					X_word2idx, X_idx2word, X_left1, X_left2, X_left3, X_right1, X_right2, X_right3) 
-	else:
+	X_right.appendleft(' ')
+	X_right.pop()
+	X_right3 = list(X_right)
+	X_right3 = getIndexedWords(X_right3, y_unique, orig=False)
+
+	if context1 == True:
 		if test == True:
 			complete_list = [X_un, y_un, y1, y2, y3, y4, y5, y7, y8]
-			return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word)
+			return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word, X_left, X_right)
 		else:
-			return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word)
+			return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word, X_left, X_right)
+
+	elif context2 == True:
+		if test == True:
+			complete_list = [X_un, y_un, y1, y2, y3, y4, y5, y7, y8]
+			return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, 
+				len(X_vocab)+2, X_word2idx, X_idx2word, X_left1, X_left2, X_right1, X_right2)
+		else:
+			return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, 
+				X_word2idx, X_idx2word, X_left1, X_left2, X_right1, X_right2)
+
+	elif context3 == True:
+		if test == True:
+			complete_list = [X_un, y_un, y1, y2, y3, y4, y5, y7, y8]
+			return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, 
+				len(X_vocab)+2, X_word2idx, X_idx2word, X_left1, X_left2, X_left3, X_right1, X_right2, X_right3)
+		else:
+			return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, 
+				X_word2idx, X_idx2word, X_left1, X_left2, X_left3, X_right1, X_right2, X_right3) 
+  else:
+	if test == True:
+		complete_list = [X_un, y_un, y1, y2, y3, y4, y5, y7, y8]
+		return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word)
+	else:
+		return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word)
+
+			
+			
