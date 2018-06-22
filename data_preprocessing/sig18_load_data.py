@@ -14,7 +14,6 @@ le = preprocessing.LabelEncoder()
 sentences = pickle.load(open('./pickel_dumps/sentences_train_low', 'rb'))
 rootwords = pickle.load(open('./pickel_dumps/rootwords_train_low', 'rb'))
 features = pickle.load(open('./pickel_dumps/features_train_low', 'rb'))
-    
 
 def getIndexedWords(X_unique, y_unique, orig=False):
     X_un = [list(x) for x,w in zip(X_unique, y_unique) if len(x) > 0 and len(w) > 0]
@@ -31,8 +30,8 @@ def getIndexedWords(X_unique, y_unique, orig=False):
             X_vocab.remove(i)
 
     X_idx2word = [letter[0] for letter in X_vocab]
-    X_idx2word.insert(0, 'ZERO') # 'Z' is the starting token
-    X_idx2word.append('UNK') # 'U' for out-of-vocab characters
+    X_idx2word.insert(0, 'ZERO') # 'ZERO' is the starting token
+    X_idx2word.append('UNK') # 'UNK' for out-of-vocab characters
     
     # create letter-to-index mapping
     X_word2idx =  {letter:idx for idx, letter in enumerate(X_idx2word)}
@@ -48,31 +47,28 @@ def getIndexedWords(X_unique, y_unique, orig=False):
         return X, X_un, X_vocab, X_word2idx, X_idx2word
     else:
         return X
-
+"""
 def getIndexedfeatures(X_msd):
     le.fit(X_msd)
     msd2id = list(le.transform(X_msd))
     return msd2id
 
-def search(target, sent_id, context=2, left = False, right = False):
-    matches = (i for (i,w) in enumerate(rootwords[sent_id]) if w == target)
-    for index in matches:
-        if left == True:
-            if index < context:
-                yield sentences[sent_id][0:index-1]
-            else: 
-                yield sentences[sent_id][index - context:index]
-        if right == True: 
-            yield sentences[sent_id][index+1: index+context+1]
-            
-def load_data(test= False, context1=False, context2=False, context3=False):    
-    
+def search(target_id, sent_id, context=2, left = False, right = False):
+    if left == True:
+        if target_id < context:
+                yield sentences[sent_id][0:target_id-1]
+        else: 
+                yield sentences[sent_id][target_id - context : target_id]
+    if right == True: 
+            yield sentences[sent_id][index + 1 : target_id + context + 1]
+"""            
+def load_data(sentences, rootwords, features = None, test= False, context1=False, context2=False, context3=False):    
     X_unique = [item for sublist in rootwords for item in sublist]
-    X_msd = [item for sublist in features for item in sublist]
+    #X_msd = [item for sublist in features for item in sublist]
     y_unique = [item for sublist in sentences for item in sublist]
     
-    X_msd = getIndexedfeatures(X_msd)
-    complete_list = [X_unique, X_msd, y_unique]
+    #X_msd = getIndexedfeatures(X_msd)
+    complete_list = [X_unique, y_unique]
     # process vocab indexing for X in the function since we will need to call it multiple times
     X, X_un, X_vocab, X_word2idx, X_idx2word = getIndexedWords(X_unique, y_unique, orig=True)
     
@@ -86,7 +82,7 @@ def load_data(test= False, context1=False, context2=False, context3=False):
                 y[i][j] = X_word2idx[char]
             else:
                 y[i][j] = X_word2idx['UNK']
-         
+     
     # consider a context of 1 word right and left each
     # make two lists by shifting the elements
     if context1 == True or context2 == True or context3 == True: 
@@ -127,14 +123,14 @@ def load_data(test= False, context1=False, context2=False, context3=False):
 
         if context1 == True:
             if test == True:
-                complete_list = [X_un, X_msd, y_un]
+                complete_list = [X_un, y_un]
                 return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word, X_left, X_right)
             else:
                 return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word, X_left, X_right)
 
         elif context2 == True:
             if test == True:
-                complete_list = [X_un, X_msd, y_un]
+                complete_list = [X_un, y_un]
                 return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, 
                     len(X_vocab)+2, X_word2idx, X_idx2word, X_left1, X_left2, X_right1, X_right2)
             else:
@@ -143,7 +139,7 @@ def load_data(test= False, context1=False, context2=False, context3=False):
 
         elif context3 == True:
             if test == True:
-                complete_list = [X_un, X_msd, y_un]
+                complete_list = [X_un, y_un]
                 return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, 
                     len(X_vocab)+2, X_word2idx, X_idx2word, X_left1, X_left2, X_left3, X_right1, X_right2, X_right3)
             else:
@@ -151,12 +147,14 @@ def load_data(test= False, context1=False, context2=False, context3=False):
                     X_word2idx, X_idx2word, X_left1, X_left2, X_left3, X_right1, X_right2, X_right3) 
     else:
         if test == True:
-            complete_list = [X_un, X_msd, y_un]
+            complete_list = [X_un, y_un]
             return (complete_list, X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word)
         else:
             return (X, len(X_vocab)+2, X_word2idx, X_idx2word, y, len(X_vocab)+2, X_word2idx, X_idx2word)
-X, X_vocab_len, X_word_to_ix, X_ix_to_word, y, y_vocab_len, y_word_to_ix, y_ix_to_word = load_data()
-
+            
+         
+#X, X_vocab_len, X_word_to_ix, X_ix_to_word, y, y_vocab_len, y_word_to_ix, y_ix_to_word = load_data()
+        
 
                 
 #print(list(search('the', 0, left = True)))    
