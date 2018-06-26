@@ -86,7 +86,7 @@ def load_data(sentences, rootwords, features = None, test= False, context1=False
     # consider a context of 1 word right and left each
     # make two lists by shifting the elements
     if context1 == True or context2 == True or context3 == True: 
-        X_left = deque(X_unique)
+        X_left = deque(y_unique)
         
         X_left.append(' ') # all elements would be shifted one left
         X_left.popleft()
@@ -104,7 +104,7 @@ def load_data(sentences, rootwords, features = None, test= False, context1=False
         X_left3 = getIndexedWords(X_left3, y_unique, orig=False)
         
 
-        X_right = deque(X_unique)
+        X_right = deque(y_unique)
 
         X_right.appendleft(' ') 
         X_right.pop()
